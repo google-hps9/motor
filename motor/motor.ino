@@ -3,7 +3,7 @@
 
 const int dirPin = 2; // step motor dirPin
 const int stepPin = 3; // step motor stepPin
-const int stepsPerMove = 40; 
+const int stepsPerMove = 100; 
 char signal; // from Serial, 'L' for left, 'R' for right
 
 void turn() {
@@ -16,22 +16,20 @@ void turn() {
 	}
 }
 
-void turnLeft() {
+void turnRight() {
 	digitalWrite(dirPin, HIGH);
 	turn();
 }
 
-void turnRight() {
+void turnLeft() {
 	digitalWrite(dirPin, LOW);
 	turn();
 }
 
 void setup() {
 	Serial.begin(9600);
-  pinMode(8, OUTPUT);
-  pinMode(9, OUTPUT);
-	// pinMode(stepPin, OUTPUT);
-	// pinMode(dirPin, OUTPUT);
+	pinMode(stepPin, OUTPUT);
+	pinMode(dirPin, OUTPUT);
 }
 
 void loop() {
@@ -39,18 +37,12 @@ void loop() {
 		signal = Serial.read();
     if(signal == 'L') {
       // motor rotate left
-      // turnLeft();
-      digitalWrite(8, HIGH);
-      delay(5000);
-      digitalWrite(8, LOW);
+      turnLeft();
       Serial.write('F');
     }
     else if(signal == 'R') {
       // motor rotate right
-      // turnRight();
-      digitalWrite(9, HIGH);
-      delay(5000);
-      digitalWrite(9, LOW);
+      turnRight();
       Serial.write('F');
     }
     else {
@@ -59,7 +51,6 @@ void loop() {
     }
 	}
   else {
-    digitalWrite(8, LOW);
-    digitalWrite(9, LOW);
+    digitalWrite(stepPin, LOW);  
   }
 }

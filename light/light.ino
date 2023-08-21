@@ -4,13 +4,13 @@
 const int IRPin = 9;
 const int sec = 3; // time for led on after detecting a person
 const int ledPin = 5;
-const int ledNum = 2; // number of LED
-const int ledBrightness = 64;
+const int ledNum = 18; // number of LED
+const int ledBrightness = 15;
 CRGB leds[ledNum];
 
 void lightOn() {
     for(int i = 0; i < ledNum; i++) {
-        leds[i] = CRGB::Red;
+        leds[i] = 0x777777;
         FastLED.show();
     }
 }
