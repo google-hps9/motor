@@ -1,5 +1,6 @@
 // Arduino get signal from Rpi and control motor
 // Stepper Motor with A4988
+#include <Wire.h>
 
 const int dirPin = 2; // step motor dirPin
 const int stepPin = 3; // step motor stepPin
@@ -32,34 +33,37 @@ void setup() {
 	pinMode(stepPin, OUTPUT);
 	pinMode(dirPin, OUTPUT);
   pinMode(rstPin, OUTPUT);
+  Wire.begin(3);
+  Wire.onReceive(receiveEvent);
 }
 
 void loop() {
-  digitalWrite(rstPin, LOW); 
-	if(Serial.available() > 0) {
-		signal = Serial.read();
+  digitalWrite(stepPin, LOW);
+  digitalWrite(rstPin, LOW);  
+  delay(100);
+}
+
+void receiveEvent(int numBytes) {
+  while(Wire.available()) { 
+    char c = Wire.read();
+    Serial.print(c);
     digitalWrite(rstPin, HIGH);
-    if(signal == 'L') {
+    if(c == 'R') {
       // motor rotate left
       turnLeft();
       delay(2000);
       turnRight();
       Serial.write('F');
     }
-    else if(signal == 'R') {
+    else if(c == 'L') {
       // motor rotate right
       turnRight();
       delay(2000);
       turnLeft();
       Serial.write('F');
     }
-    // else {
-    //   // motor stop
-    //   digitalWrite(stepPin, LOW);
-    // }
-	}
-  else {
-    digitalWrite(stepPin, LOW);
-    digitalWrite(rstPin, LOW);  
+    else {
+      digitalWrite(stepPin, LOW);
+    }
   }
 }
